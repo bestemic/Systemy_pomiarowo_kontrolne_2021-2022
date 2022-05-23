@@ -9,11 +9,12 @@ void setup()
 {
     DDRC = 0b00000001; // setting port to output
 
-    TCNT0 = 0;  // timer initialization
-    OCR0 = 100; // setting comparable
+    TCCR1A = 0;
+    TCCR1B = (1 << CS11);                 // prescaler settings
+    TIMSK = (1 << TICIE1) | (1 << TOIE1); // allowing interuptions
 
-    TCCR0 = (1 << WGM01) | (1 << CS01);  // prescaler settings
-    TIMSK = (1 << OCIE0) | (1 << TOIE0); // allowing interuptions
+    TCNT1H = 0b11111111; // timer initialization
+    TCNT1L = 0b10011100; // timer initialization
 
     SREG |= 128;
 
@@ -26,21 +27,22 @@ void loop()
     // empty loop (program using interruptions only)
 }
 
-// comparable interruptions
-ISR(TIMER0_COMP_vect)
+// overflow interruptions
+ISR(TIMER1_OVF_vect)
 {
+    TCNT1H = 0b11111111; // timer reset
+    TCNT1L = 0b10011100; // timer reset
     k++;
 
     if (k > 2000)
     {
-        TCNT0 = 0; // timer restart
         k = 0;
         odczyt = analogRead(7);           // reading from analog
         double wynik = konwersja(odczyt); // converting int number to volts
         lcd.clear();                      // clearing LCD
         PORTC = ~PORTC;                   // blinking diode
         lcd.print(wynik);                 // writing to LCD
-        Serial.println(wynik);            // writing to serial port
+        Serial.println(wynik);            // writing to serial por
     }
 }
 
