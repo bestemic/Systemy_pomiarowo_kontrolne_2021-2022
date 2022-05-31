@@ -14,7 +14,7 @@ void setup()
     digitalWrite(7, HIGH);     // switch off diode
 
     TCNT1H = 255; // timer initialization
-    TCNT1L = 198; // timer initialization
+    TCNT1L = 175; // timer initialization
 
     TCCR1A = 0;
     TCCRIB = 0;                           // turning off timer
@@ -42,7 +42,7 @@ void loop()
 
         pomiar++;
         TCNT1H = 255; // timer reset
-        TCNT1L = 198; // timer reset
+        TCNT1L = 175; // timer reset
 
         digitalWrite(7, LOW); // turn off diode
 
@@ -96,5 +96,5 @@ ISR(TIMER1_OVF_vect)
 {
     k++;
     TCNT1H = 255; // timer reset
-    TCNT1L = 198; // timer reset
+    TCNT1L = 175; // timer reset
 }
